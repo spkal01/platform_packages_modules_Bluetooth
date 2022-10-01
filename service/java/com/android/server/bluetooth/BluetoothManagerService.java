@@ -446,7 +446,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
                 }
             } else if (Intent.ACTION_SETTING_RESTORED.equals(action)) {
                 final String name = intent.getStringExtra(Intent.EXTRA_SETTING_NAME);
-                if (Settings.Global.BLUETOOTH_ON.equals(name)) {
+                if (Settings.System.BLUETOOTH_ON.equals(name)) {
                     // The Bluetooth On state may be changed during system restore.
                     final String prevValue =
                             intent.getStringExtra(Intent.EXTRA_SETTING_PREVIOUS_VALUE);
@@ -575,9 +575,9 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         }
 
         String airplaneModeRadios =
-                Settings.Global.getString(mContentResolver, Settings.Global.AIRPLANE_MODE_RADIOS);
+                Settings.System.getString(mContentResolver, Settings.System.AIRPLANE_MODE_RADIOS);
         if (airplaneModeRadios == null || airplaneModeRadios.contains(
-                Settings.Global.RADIO_BLUETOOTH)) {
+                Settings.System.RADIO_BLUETOOTH)) {
             mBluetoothAirplaneModeListener = new BluetoothAirplaneModeListener(
                     this, mBluetoothHandlerThread.getLooper(), context);
         }
@@ -623,7 +623,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         }, btFilter);
 
         context.getContentResolver().registerContentObserver(
-                Settings.Global.getUriFor(Settings.Global.BLUETOOTH_OFF_TIMEOUT),
+                Settings.System.getUriFor(Settings.System.BLUETOOTH_OFF_TIMEOUT),
                 false,
                 new ContentObserver(new Handler(context.getMainLooper())) {
                     @Override
@@ -667,8 +667,8 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
     }
 
     private static long btTimeoutDurationInMilli(Context context) {
-        return Settings.Global.getLong(context.getContentResolver(),
-                Settings.Global.BLUETOOTH_OFF_TIMEOUT, 0);
+        return Settings.System.getLong(context.getContentResolver(),
+                Settings.System.BLUETOOTH_OFF_TIMEOUT, 0);
     }
 
     /** Zero is default and means disabled */
@@ -680,8 +680,8 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
      *  Returns true if airplane mode is currently on
      */
     private boolean isAirplaneModeOn() {
-        return Settings.Global.getInt(mContext.getContentResolver(),
-                Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+        return Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.AIRPLANE_MODE_ON, 0) == 1;
     }
 
     private boolean supportBluetoothPersistedState() {
@@ -696,7 +696,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         if (!supportBluetoothPersistedState()) {
             return false;
         }
-        int state = Settings.Global.getInt(mContentResolver, Settings.Global.BLUETOOTH_ON, -1);
+        int state = Settings.System.getInt(mContentResolver, Settings.System.BLUETOOTH_ON, -1);
         if (DBG) {
             Slog.d(TAG, "Bluetooth persisted state: " + state);
         }
@@ -707,7 +707,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         if (!supportBluetoothPersistedState()) {
             return false;
         }
-        int state = Settings.Global.getInt(mContentResolver, Settings.Global.BLUETOOTH_ON, -1);
+        int state = Settings.System.getInt(mContentResolver, Settings.System.BLUETOOTH_ON, -1);
         if (DBG) {
             Slog.d(TAG, "Bluetooth persisted state: " + state);
         }
@@ -721,7 +721,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         if (!supportBluetoothPersistedState()) {
             return false;
         }
-        return Settings.Global.getInt(mContentResolver, Settings.Global.BLUETOOTH_ON,
+        return Settings.System.getInt(mContentResolver, Settings.System.BLUETOOTH_ON,
                 BLUETOOTH_ON_BLUETOOTH) == BLUETOOTH_ON_BLUETOOTH;
     }
 
@@ -735,8 +735,8 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         // waive WRITE_SECURE_SETTINGS permission check
         final long callingIdentity = Binder.clearCallingIdentity();
         try {
-            Settings.Global.putInt(mContext.getContentResolver(),
-                    Settings.Global.BLUETOOTH_ON, value);
+            Settings.System.putInt(mContext.getContentResolver(),
+                    Settings.System.BLUETOOTH_ON, value);
         } finally {
             Binder.restoreCallingIdentity(callingIdentity);
         }
@@ -992,8 +992,8 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
             return false;
         }
         try {
-            return Settings.Global.getInt(mContentResolver,
-                    Settings.Global.BLE_SCAN_ALWAYS_AVAILABLE) != 0;
+            return Settings.System.getInt(mContentResolver,
+                    Settings.System.BLE_SCAN_ALWAYS_AVAILABLE) != 0;
         } catch (SettingNotFoundException e) {
         }
         return false;
@@ -1005,7 +1005,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
     }
 
     private boolean isDeviceProvisioned() {
-        return Settings.Global.getInt(mContentResolver, Settings.Global.DEVICE_PROVISIONED,
+        return Settings.System.getInt(mContentResolver, Settings.System.DEVICE_PROVISIONED,
                 0) != 0;
     }
 
@@ -1029,7 +1029,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         };
 
         mContentResolver.registerContentObserver(
-                Settings.Global.getUriFor(Settings.Global.DEVICE_PROVISIONED), false,
+                Settings.System.getUriFor(Settings.System.DEVICE_PROVISIONED), false,
                 contentObserver);
     }
 
@@ -1061,7 +1061,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         };
 
         mContentResolver.registerContentObserver(
-                Settings.Global.getUriFor(Settings.Global.BLE_SCAN_ALWAYS_AVAILABLE), false,
+                Settings.System.getUriFor(Settings.System.BLE_SCAN_ALWAYS_AVAILABLE), false,
                 contentObserver);
     }
 
